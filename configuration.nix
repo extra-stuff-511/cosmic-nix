@@ -2,19 +2,17 @@
 
 {
   imports =
-    [ 
+    [
       ./hardware-configuration.nix
     ];
 
+  # Nix Services
+  nix.gc.automatic  = true;
+  nix.gc.dates  = "03:00";
 
-
-  # Nix Features
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-  
-
+  # VM Guest
+  #services.spice-vdagentd.enable = true;
+  #services.xserver.videoDrivers = [ "modesetting" ];
 
   # Bootloader
   boot.loader.systemd-boot.enable = true;
@@ -63,11 +61,11 @@
 
 
   # X11
-  services.xserver.enable = true;
-  services.xserver.excludePackages = [ pkgs.xterm ];
+  #services.xserver.enable = true;
+  #services.xserver.excludePackages = [ pkgs.xterm ];
 
 
- 
+
   # Sound
   security.rtkit.enable = true;
   services.pipewire = {
@@ -105,50 +103,37 @@
 
   # Packages
   programs.fish.enable = true;
-
   nixpkgs.config.allowUnfree = true;
   programs.steam.enable = true;
-
   services.syncthing.enable = true;
 
   environment.systemPackages = with pkgs; [
-    vim
-    git 
+    git
     openssh
     curl
     wget
     fastfetch
-    fish
     neovim
-    librewolf
-    virt-manager
-    baobab
-    krita
-    loupe
-    foliate
-    libreoffice
-    qt6Packages.qt6ct
-    adw-gtk3
-    adwaita-icon-theme
-    hicolor-icon-theme
-    gnome-icon-theme
-    pop-icon-theme
-    tela-circle-icon-theme
-    kdePackages.breeze-icons
-    qt5.qtwayland
-    qt6.qtwayland
+    firefox-esr
+    timeshift
   ];
 
 
 
   # Desktop Environment
+  hardware.graphics.enable = true;
   services.displayManager.cosmic-greeter.enable = true;
   services.desktopManager.cosmic.enable = true;
-  hardware.graphics.enable = true;
+  environment.cosmic.excludePackages = with pkgs; [
+    cosmic-store
+  ];
+
+  # Services
+  services.openssh.enable = true;
+  environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = "1";
 
 
 
   system.stateVersion = "26.05";
 
 }
-
